@@ -24,7 +24,7 @@
 				<p class="icon"></p>
 			</div>
 
-			<BaseRouterTransition>
+			<div>
 				<div v-show="isReport">
 					<div class="process-item">
 						<div>测量三庭</div>
@@ -49,8 +49,8 @@
 						</p>
 					</div>
 				</div>
-			</BaseRouterTransition>
-			<BaseRouterTransition>
+			</div>
+			<div>
 				<!-- 面向报告生成页 -->
 				<div class="report" v-show="!isReport">
 					<div class="report-input">
@@ -65,15 +65,15 @@
 						</van-button>
 					</div>
 				</div>
-			</BaseRouterTransition>
+			</div>
 			<div class="photograph-btn">
-				<p>HTTP://WWW.YOUNGFDU.COM</p>
+				<p>HTTP://WWW.YOUNGDU.COM</p>
 			</div>
 		</div>
 	</div>
 </template>
 <script>
-	import BaseRouterTransition from '../../components/BaseRouterTransition'
+	// import BaseRouterTransition from '../../components/BaseRouterTransition'
 	import {
 		Dialog
 	} from 'vant';
@@ -122,7 +122,7 @@
 			}
 		},
 		components: {
-			BaseRouterTransition
+			// BaseRouterTransition
 		},
 		computed: {
 			...mapState({
@@ -143,13 +143,13 @@
 					this.statusInfoNum = 1
 					this.status = 'transtion-two'
 					three()
-				}, 2000)
+				}, 600)
 				const three = () => {
 					setTimeout(() => {
 						this.statusInfoNum = 2
 						this.status = 'transtion-three'
 						is_report()
-					}, 6000)
+					}, 2600)
 				}
 				const is_report = () => {
 					setTimeout(() => {
@@ -254,7 +254,7 @@
 		}
 
 		.process-item {
-			margin: 2rem auto 1rem;
+			margin: 1rem auto;
 			// width: 360px;
 			display: flex;
 			justify-content: space-around;
@@ -269,39 +269,39 @@
 
 			// 12vw; 37.333vw 64vw
 			img {
-				width: 18px;
-				height: 12px;
+				width: 4%;
+				height: 2vh;
 				position: absolute;
-				left: 12vw;
+				left: 14%;
 			}
 
 			.transtion-two {
-				left: 37.333vw;
-				animation: statusCssone 1.2s linear;
+				left: 48%;
+				animation: statusCssone 0.2s linear;
 			}
 
 			@keyframes statusCssone {
 				0% {
-					left: 12vw;
+					left: 14%;
 				}
 
 				100% {
-					left: 37.333vw;
+					left: 48%;
 				}
 			}
 
 			.transtion-three {
-				left: 64vw;
+				left: 82%;
 				animation: statusCssthree 1.2s linear;
 			}
 
 			@keyframes statusCssthree {
 				0% {
-					left: 37.333vw;
+					left: 48%;
 				}
 
 				100% {
-					left: 64vw;
+					left: 82%;
 				}
 			}
 		}
@@ -309,7 +309,7 @@
 		// -css
 		.status-info {
 			width: 60%;
-			margin: 3rem auto;
+			margin: 0 auto;
 			margin-top: 5rem;
 
 			p {
@@ -476,23 +476,22 @@
 				// height: 150px;
 				background: url("../../assets/images/saomiao/bg_input.png") no-repeat;
 				background-size: 100% 100%;
-
 				input {
 					// background-color: rgba(0, 0, 0, 0);
-					width: 25px;
+					width: 40vw;
+					height: 10vh;
 					margin: 0 auto;
-					top: 63px;
+					// top: 63px;
 					border: none;
 					background: url("../../assets/images/saomiao/edit.png") no-repeat;
-					background-size: 26px 26px;
-					background-position: 0 1.267vw;
-					text-indent: 36px;
+					background-size: 20% 20%;
+					background-position: 0 50%;
+					text-indent: 50px;
 				}
-
 				input::-webkit-input-placeholder {
 					color: #fff;
-					font-size: 24px;
-					font-weight: 400;
+					font-size: 10px;
+					font-weight: 200;
 				}
 
 				.van-button {
@@ -509,7 +508,7 @@
 
 			// margin-top: 140px;
 			.van-button {
-				border-radius: 16px;
+				border-radius: 26px;
 				// border: 2px solid rgba(62, 151, 255, 1);
 				width: 80%;
 				height: 50px;
@@ -524,6 +523,7 @@
 
 			.btn_photo_bg {
 				border: none;
+				border-radius: 26px;
 				margin-top: 60px;
 				background: url("../../assets/images02/photograph/tijiaoanniu.png") no-repeat center;
 				background-size: 100%;
