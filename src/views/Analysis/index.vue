@@ -196,11 +196,12 @@
 
 	.bg-img {
 		z-index: 1;
-		padding: 20px 20px;
+		padding: 20px;
+		margin: 0px 0px;
 		text-align: right;
 
 		img {
-			height: 8px;
+			height: 20px;
 		}
 	}
 

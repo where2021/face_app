@@ -1,7 +1,7 @@
 <template>
 	<div class="home">
 		<div class="bg-img">
-			<img src="../../assets/images02/photograph/ic_logo2.png" />
+			<img height="5rem" src="../../assets/images02/photograph/ic_logo2.png" />
 		</div>
 		<div class="conetnt">
 			<p class="title">
@@ -182,7 +182,7 @@
 		margin: 0px 0px;
 		text-align: right;
 		img {
-			height: 10px;
+			height: 20px;
 		}
 	}
 	.conetnt {
