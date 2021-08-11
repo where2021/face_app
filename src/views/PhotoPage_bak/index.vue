@@ -17,15 +17,11 @@
 				<p class="icon"></p>
 			</div>
 			<div>
-				<p class="title tip" v-show="isConfirm==0">满足以下要求，结果更准确</p>
+				<p class="title tip" v-show="isConfirm">满足以下要求，结果更准确</p>
 				<div class="need" v-show="isConfirm">
 				</div>
 			</div>
-			<!-- 控制：isConfirm==0:显示提示 ==1:当选择照片后，显示正在检测 
-			     ==2 人脸识别后，显示未检测到人脸
-			     ==3：人脸识别后检测到人脸，但戴眼镜 ==4 人脸识别后检测到人脸，未戴眼镜
-			-->
-			<div class="need" v-show="isConfirm==0">
+			<div class="need" v-show="isConfirm">
 				<div class="item">正面</div>
 				<div class="item">五官清晰</div>
 				<div class="item">不戴眼镜</div>
@@ -33,41 +29,7 @@
 				<div class="item">无刘海遮挡</div>
 			</div>
 			<div>
-				<div class="need-confirm" v-show="isConfirm==1">
-					<div class="need-confirm-content">
-						<p>
-							正在进行初步检测。。。。
-						</p>
-					</div>
-				</div>
-				<div class="need-confirm" v-show="isConfirm==2">
-					<div class="need-confirm-content">
-						<p>
-							<span>未检测到人脸</span>
-							<img :src="tip_img.warning" alt />
-						</p>
-					</div>
-				</div>
-				<div class="need-confirm" v-show="isConfirm==3">
-					<div class="need-confirm-content">
-						<p>
-							头部姿势：
-							<span>正面</span>
-							<img :src="tip_img.correct" alt />
-						</p>
-						<p>
-							左眼状态：
-							<span>睁眼，未戴眼镜</span>
-							<img :src="tip_img.correct" alt />
-						</p>
-						<p>
-							右眼状态：
-							<span>睁眼，未戴眼镜</span>
-							<img :src="tip_img.correct" alt />
-						</p>
-					</div>
-				</div>
-				<div class="need-confirm" v-show="isConfirm==4">
+				<div class="need-confirm" v-show="!isConfirm">
 					<div class="need-confirm-content">
 						<p>
 							头部姿势：
@@ -87,7 +49,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="photograph-btn" v-show="isConfirm==0">
+			<div class="photograph-btn" v-show="isConfirm">
 				<van-uploader enctype="multipart/form-data" accept="image/*" class="button" :after-read="afterRead">
 					<van-button class="button-div btn_photo_bg" id="btn_photo" type="primary">
 						<van-icon color="#84FF00" size="4vw" name="photograph" />拍照/上传照片
@@ -95,17 +57,9 @@
 				</van-uploader>
 				<!-- <p>HTTP://WWW.YOUNGDU.COM</p> -->
 			</div>
-			<div class="photograph-btn" v-show="isConfirm==2">
-				<van-uploader enctype="multipart/form-data" accept="image/*" class="button" :after-read="afterRead">
-					<van-button class="button-div btn_photo_bg" id="btn_photo" type="primary">
-						<van-icon color="#84FF00" size="4vw" name="photograph" />重新拍照/上传照片
-					</van-button>
-				</van-uploader>
-				<!-- <p>HTTP://WWW.YOUNGDU.COM</p> -->
-			</div>
 
 			<div>
-				<div class="bottom_btn" v-show="isConfirm==4">
+				<div class="bottom_btn" v-show="!isConfirm">
 					<div class="button button-conf">
 						<van-button class="button-div btn_photo_bg btn_photo_color" @click="handleBtnAgain"
 							type="primary">重新上传</van-button>
@@ -140,7 +94,7 @@
 				title2: '属于哪一种类型?',
 				isTitle: '',
 				photo_img: require('../../assets/images02/photograph/touxiang.png'),
-				isConfirm: 0,
+				isConfirm: true,
 				tip_img: {
 					correct: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADkAAAA4CAMAAABwmqASAAAAk1BMVEUAAAADxwUDxwUDxwUDxwUDxwUDxwUDxwUDxwUDxwUDxwUDxwUDxwUDxwUDxwUDxwUDxwUDxwUDxwUDxwUDxwUDxwUDxwUDxwUDxwUDxwUDxwUDxwUDxwUDxwUDxwUDxwUDxwUDxwUDxwUDxwUDxwUDxwUDxwUDxwUDxwUDxwUDxwUDxwUDxwUDxwUDxwUDxwUDxwWPcL6XAAAAMHRSTlMA8QX6o03dzunlJh8QCPbWsZQ3KgvtvbacfnJqXllBPjMWx4tvY0guHfOpgnlmU7/6TN/xAAABlUlEQVRIx53W15qCMBQE4NARCypYsGJbuzvv/3T7yeKaclaS/PdDAswJMDtZ3y7X3XmxVXAYApFNsPAATMxznQmepsbBdopKYRo8tvDrYBhcOagFZsF1Dy+lWfCMP4nRa3TwdjIIJjE4Hf3gJgRvox10xxC0tZNTiIa6wQMkS81g2YOk0Gx5CJnmZPtQOK5OcAHCl85gOSD4GskxCKNBc/AOVbzXuM0TsdepVmv76kbph9NlogCyiK5sEAbihZQOXLrk8+/LR/AVkh05SLeqnQ/+UnJfZ+S5lqKSfqjdnBp5nxigIXj0ITvn3lrqUu2hVywj8Bav/UOwV6dvAFFYL7oF76rOUAzZnSiB2vACqlb1toVb6BMVz3wPsrm85Danfxcm6qLiXYb/HsxBS+nKGm9O8uF0k9oS59w+vM9nzsMRh5csKy2JQLuwJrkPSpqzZjeozhnTsfRg++lZO4BUOl2l2OLIZdoSvhS9jDG76N7wD22E2lgvoP74jE7M1MqrTxVzwTP6zWzMAO/IrAywY3Zcv6noP1SEq/OgNc3TAAAAAElFTkSuQmCC',
 					warning: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACwAAAAsCAMAAAApWqozAAAAM1BMVEUAAAD7ZAD6ZAD7ZAD9YwD7ZAD8ZAD5YQD7ZAD7ZAD7ZAD6ZAD7ZAD7ZAD8ZAD7ZAD7ZADc5bCPAAAAEHRSTlMA6gzDN5dwGNC0ot6BWCRIgBgKRwAAAQpJREFUOMu9lNt2hCAMRUmUi4BO/v9rOx2HniG6CH1o91v0cMkWcf8KeyLPk9kkT9JcOsuLPJNd5c3qbFILJzu7yw+72R0hTFaPVT6o42yUjmhrA3lC2xLCYutbMJ8/h5na+KXF0MelzYZVCg+06bDUsTY6Sxrq851dbpW/19Z49OV6q60Rvssgje2afUgDnrGS4tQGHRvqorNBAKnBEpQ2UoeNP2uKd9rQ/4FK6VOvZH/3Cw4HNumoMaIH6IM2A+hLYpKgrYeee96hp9PH+vmKs3G5F6pe8X5vFdpU5zAEDjzUCzJdJ8HegMc3Vb1kUeDe0GRHMg05+QX4m2wWNDgCJ9cXmaD4w/0dXyVhOsjXZsVVAAAAAElFTkSuQmCC',
@@ -172,12 +126,6 @@
 				const detections = await faceapi.detectAllFaces(img)
 				console.log('====')
 				console.log(detections.length)
-				const is_face = detections.length
-				if (is_face){
-					this.isConfirm=4
-				} else {
-					this.isConfirm=2
-				}
 				return detections.length
 			},
 			afterRead(file) {
@@ -186,19 +134,19 @@
 				// console.log(file.content)
 				// console.log(Object.keys(file))
 				// 在这里应该调用上传接口  做一些用户操作提示性的tip
-				// console.log(file)
+				console.log(file)
 				this.set_app({
 				  parmes_data: file.content,
 				})
-				// console.log(this.$store.state.app.app.parmes_data)
+				console.log(this.$store.state.app.app.parmes_data)
 				this.file = file
-				this.isConfirm=1
 				this.ConfirmUpload(file)
 			},
 			ConfirmUpload(file) {
 				// console.log(file)
 				this.photo_img = file.content
 				this.isTitle = '确认照片'
+				this.isConfirm = false
 				let a = this.detect_face()
 				console.log('====')
 				console.log(a)
