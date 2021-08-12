@@ -21,7 +21,9 @@
 				<div class="need" v-show="isConfirm">
 				</div>
 			</div>
-			<!-- 控制：isConfirm==0:显示提示 ==1:当选择照片后，显示正在检测 
+			<!-- 控制：isConfirm(后面把名字改掉)
+			     ==0:显示提示 
+			     ==1:当选择照片后，显示正在检测 
 			     ==2 人脸识别后，显示未检测到人脸
 			     ==3：人脸识别后检测到人脸，但戴眼镜 ==4 人脸识别后检测到人脸，未戴眼镜
 			-->
@@ -36,7 +38,8 @@
 				<div class="need-confirm" v-show="isConfirm==1">
 					<div class="need-confirm-content">
 						<p>
-							正在进行初步检测。。。。
+							<span>正在进行人脸基础检测</span>
+							<img class='load-stuts' src='../../assets/images/saomiao/loading.png' />
 						</p>
 					</div>
 				</div>
@@ -170,8 +173,6 @@
 				const img = new Image()
 				img.src = this.photo_img
 				const detections = await faceapi.detectAllFaces(img)
-				console.log('====')
-				console.log(detections.length)
 				const is_face = detections.length
 				if (is_face){
 					this.isConfirm=4
@@ -228,7 +229,7 @@
 			},
 			// 重新上传
 			handleBtnAgain() {
-				this.isConfirm = true
+				this.isConfirm = 0
 				this.photo_img =
 					'http://m3d-storage-dev-1251693531.cos.ap-shanghai.myqcloud.com/h5/ai/beauty/images/touxiang.png'
 			}
@@ -352,6 +353,30 @@
 						width: 22px;
 						height: 22px;
 						float: right;
+					}
+					.load-stuts {
+						width: 20px;
+						height: 20px;
+						animation: rotatecss 1s linear infinite;
+						// background: url("../../assets/images/saomiao/loading.png") no-repeat;
+						// background-size: 100% 100%;
+					}
+					@keyframes rotatecss {
+						0% {
+							transform: rotate(0deg);
+						}
+						25% {
+							transform: rotate(90deg);
+						}
+						50% {
+							transform: rotate(180deg);
+						}
+						75% {
+							transform: rotate(270deg);
+						}
+						100% {
+							transform: rotate(360deg);
+						}
 					}
 				}
 			}
