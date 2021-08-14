@@ -10,7 +10,7 @@
 				<span>{{ title2 }}</span>
 			</p>
 			<div class="img-Head">
-				<van-image radius="0" :src="photo_img" />
+				<van-image width="50%" height="50%" radius="0" :src="photo_img" />
 			</div>
 			<div class="head-icon">
 				<p class="title">{{ isTitle }}</p>
@@ -18,8 +18,8 @@
 			</div>
 			<div>
 				<p class="title tip" v-show="isConfirm==0">满足以下要求，结果更准确</p>
-				<!-- <div class="need" v-show="isConfirm"> -->
-				<!-- </div> -->
+				<div class="need" v-show="isConfirm">
+				</div>
 			</div>
 			<!-- 控制：isConfirm(后面把名字改掉)
 			     ==0:显示提示 
@@ -91,17 +91,32 @@
 				</div>
 			</div>
 			<div class="photograph-btn" v-show="isConfirm==0">
-				<van-uploader enctype="multipart/form-data" accept="image/*" :after-read="afterRead">
+				<van-uploader enctype="multipart/form-data" accept="image/*" class="button" :after-read="afterRead">
 					<van-button class="button-div btn_photo_bg" id="btn_photo" type="primary">
 						<van-icon color="#84FF00" size="4vw" name="photograph" />拍照/上传照片
 					</van-button>
 				</van-uploader>
+				<!-- <p>HTTP://WWW.YOUNGDU.COM</p> -->
 			</div>
-			<div class="photograph-btn" v-show="isConfirm==4">
-				<van-button class="button-div btn_photo_bg1 btn_photo_color" @click="handleBtnAgain" type="primary">
-					重新上传</van-button>
-				<van-button class="button-div btn_photo_bg1" @click="handleBtnConfirm">
-					确认上传</van-button>
+			<div class="photograph-btn" v-show="isConfirm==2">
+				<van-uploader enctype="multipart/form-data" accept="image/*" class="button" :after-read="afterRead">
+					<van-button class="button-div btn_photo_bg" id="btn_photo" type="primary">
+						<van-icon color="#84FF00" size="4vw" name="photograph" />重新拍照/上传照片
+					</van-button>
+				</van-uploader>
+				<!-- <p>HTTP://WWW.YOUNGDU.COM</p> -->
+			</div>
+
+			<div>
+				<div class="bottom_btn" v-show="isConfirm==4">
+					<div class="button button-conf">
+						<van-button class="button-div btn_photo_bg btn_photo_color" @click="handleBtnAgain"
+							type="primary">重新上传</van-button>
+						<van-button class="button-div button-cancel btn_photo_bg" @click="handleBtnConfirm">确认上传
+						</van-button>
+					</div>
+					<p>HTTP://WWW.YOUNGDU.COM</p>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -149,6 +164,8 @@
 				'set_app'
 			]),
 			async detect_face() {
+				// const input = document.getElementById('van-img')
+				// 模型加载
 				const MODEL_URL = "/models";
 				await faceapi.loadSsdMobilenetv1Model(MODEL_URL);
 				await faceapi.loadFaceLandmarkModel(MODEL_URL);
@@ -223,27 +240,26 @@
 	.home {
 		background: url("../../assets/images02/photograph/ic_bg.jpg") no-repeat;
 		background-size: 100%;
-		height: 100vh;
+		height: 100%;
 		width: 100%;
 		color: #fff;
 		background-color: #001037;
-		overflow: scroll;
+		overflow: auto !important;
 	}
+
 	.bg-img {
 		z-index: 1;
-		height: 6vh;
-		position: relative;
+		padding: 20px;
+		margin: 0px 0px;
+		text-align: right;
 		img {
-			position: absolute;
-			height: 3vh;
-			right: 10px;
-			top: 10px;
+			height: 20px;
 		}
 	}
 	.conetnt {
 		z-index: 1;
 		width: 95%;
-		height: 92vh;
+		height: 100%;
 		background-color: #000018cc;
 		border-radius: 30px 30px 30px 30px;
 		margin: 0 auto;
@@ -251,10 +267,10 @@
 		.title {
 			color: rgba(255, 255, 255, 1);
 			text-align: center;
-			margin: 2vh auto;
-			width: 100vw;
+			margin-bottom: 1rem;
+			margin-top:1rem;
 			display: inline-block;
-			;
+			height: 5vh;
 			.icon {
 				display: inline-block;
 				width: 40px;
@@ -266,10 +282,8 @@
 				bottom: 10px;
 			}
 			span {
-				font-size: 5vw;
+				font-size: 1.5rem;
 				line-height: 2rem;
-				// position: absolute;
-				margin: 0 auto;
 			}
 			span:nth-child(3) {
 				color: #ff71c1;
@@ -278,76 +292,61 @@
 				color: #4eb0ff;
 			}
 		}
-		.img-Head {
-			height: 20vh;
-			margin: 1vh auto;
-			.van-image {
-				height: 20vh;
-			}
-		}
-		.head-icon {
-			height: 5vh;
-			margin: 1vh auto;
-			.icon {
-				width: 91px;
-				height: 3px;
-				// border-radius: 1px;
-				background: #007acf;
-				text-align: center;
-				margin: 0 auto;
-				// margin-bottom: 1.375rem;
-			}
-			.title {
-				height: 50%;
-				margin: 0;
-			}
-		}
 		.tip {
-			font-size: 5vw;
-			line-height: 5vw;
-			margin: 1vh auto;
+			font-size: large;
+			font-weight: 40;
+			line-height: 24px;
+			margin: 10px 0 10px 0;
 			color: #0096ff;
 			display: inline-block;
 		}
 		.need {
 			width: 100%;
-			height: 30vh;
-			margin: 1vh auto;
-			display:flex;
-			flex-direction: column;
-			align-items: center;
-			justify-content: space-around;
+			margin: 10px auto;
+			display: inline-block;
 			.item {
 				height: 1.875rem;
 				line-height: 1.875rem;
 				background: url("../../assets/images/photograph/juxing.png") no-repeat center;
 				background-size: 45% 100%;
-				font-size: 3vw;
+				margin-bottom: 20px;
+				font-size: 14px;
+				font-weight: 400;
+				margin: 8px auto;
+			}
+			.item:nth-child(1) {
+				width: 100%;
+			}
+			.item:nth-child(2) {
+				width: 100%;
+			}
+			.item:nth-child(3) {
+				width: 100%;
+			}
+
+			.item:nth-child(4) {
+				width: 100%;
+			}
+			.item:nth-child(5) {
 				width: 100%;
 			}
 		}
 		.need-confirm {
 			width: 100%;
-			height: 30vh;
-			margin: 1vh auto;
+			height: 100% !important;
 			// background: url("../../assets/images/photograph/confirmjuxing.png")
 			//   no-repeat 100%;
 			background-size: 100% 100%;
-			// margin-top: -43px;
+			margin-top: -43px;
 			.need-confirm-content {
-				padding: 4px 52px 4px 52px;
-				height: 100%;
-				display:flex;
-				flex-direction: column;
-				align-items: stretch;
-				justify-content: space-around;
+				padding: 46px 32px 12px 52px;
 				p {
 					text-align: left;
 					font-size: 10px;
 					font-weight: 400;
 					line-height: 24px;
 					color: #008dff;
-					// margin-bottom: 45px;
+					margin-bottom: 45px;
 					span {
 						color: #fff;
 					}
@@ -356,7 +355,6 @@
 						height: 22px;
 						float: right;
 					}
-					//动画效果
 					.load-stuts {
 						width: 20px;
 						height: 20px;
@@ -384,29 +382,78 @@
 				}
 			}
 		}
-		.photograph-btn {
-			margin: 4vw 5vw;
-			height: 15vh;
-			display:flex;
-			flex-direction: row;
-			align-items: center;
-			justify-content: space-around;
+		.button {
 			.button-div {
-				width: 50vw;
-				height: 25vw;
+				width: 210px;
+				height: 108px;
+				margin-top: 4px;
+				padding: 10px;
+				background: #3e97ff;
+				border: 2px solid rgba(62, 151, 255, 1);
+				border-radius: 16px;
+			}
+			.button-cancel {
+				margin-top: 30px;
+				background: #0f293e;
+				color: #c0c0c0;
+				border: 2px solid #ff976a;
+			}
+			.btn_photo_bg {
 				border: none;
 				margin-top: 6px;
 				background: url("../../assets/images02/photograph/tijiaoanniu.png") no-repeat center;
 				background-size: 100%;
 				color: #e6eeff;
 			}
-			.btn_photo_bg1 {
-				width: 40vw;
-				height: 20vw;
+		}
+		.bottom_btn {
+			p {
+				font-size: 8px;
+				text-align: center;
+				color: #71738c;
+				font-weight: 300;
+				margin-top: 42px;
 			}
-			.btn_photo_color {
-				color: #999999;
+			.button-conf {
+				display: flex;
+				justify-content: space-around;
+				.button-div {
+					margin-top: 2px;
+					width: 150px;
+				}
+				.btn_photo_color {
+					color: #7bd5ff;
+				}
 			}
 		}
+	}
+	.img-Head {
+		margin-bottom: 20px;
+	}
+	.head-icon {
+		.icon {
+			width: 91px;
+			height: 6px;
+			border-radius: 7px;
+			background: #007acf;
+			text-align: center;
+			margin: 0 auto;
+			margin-bottom: 0.375rem;
+		}
+	}
+	.photograph-btn {
+		padding: 10px;
+		p {
+			font-size: 12px;
+			text-align: center;
+			color: #71738c;
+			font-weight: 400;
+			margin-top: 42px;
+			padding: 10px;
+		}
+	}
+	.img-Head .van-image {
+		// width: 30wh;
+		height: 30vh;
 	}
 </style>
