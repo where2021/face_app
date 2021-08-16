@@ -16,88 +16,38 @@
 				<p class="title">{{ isTitle }}</p>
 				<p class="icon"></p>
 			</div>
-			<div>
-				<p class="title tip" v-show="isConfirm==0">满足以下要求，结果更准确</p>
-				<!-- <div class="need" v-show="isConfirm"> -->
-				<!-- </div> -->
-			</div>
-			<!-- 控制：isConfirm(后面把名字改掉)
-			     ==0:显示提示 
+			<!-- 控制：this.show_var
+			     ==0:显示照片要求提示提示 
 			     ==1:当选择照片后，显示正在检测 
-			     ==2 人脸识别后，显示未检测到人脸
-			     ==3：人脸识别后检测到人脸，但戴眼镜 ==4 人脸识别后检测到人脸，未戴眼镜
+			     ==2:人脸识别后，显示未检测到人脸
+			     ==3:人脸识别后检测到人脸，但戴眼镜 
+				 ==4:人脸识别后检测到人脸，未戴眼镜
 			-->
-			<div class="need" v-show="isConfirm==0">
-				<div class="item">正面</div>
-				<div class="item">五官清晰</div>
-				<div class="item">不戴眼镜</div>
-				<div class="item">面部呈现完整</div>
-				<div class="item">无刘海遮挡</div>
+			<!-- 照片上传前提示 -->
+			<div v-show="this.show_var==0">
+				<PicTip></PicTip>
 			</div>
-			<div>
-				<div class="need-confirm" v-show="isConfirm==1">
-					<div class="need-confirm-content">
-						<p>
-							<span>正在进行人脸基础检测</span>
-							<img class='load-stuts' src='../../assets/images/saomiao/loading.png' />
-						</p>
-					</div>
-				</div>
-				<div class="need-confirm" v-show="isConfirm==2">
-					<div class="need-confirm-content">
-						<p>
-							<span>未检测到人脸</span>
-							<img :src="tip_img.warning" alt />
-						</p>
-					</div>
-				</div>
-				<div class="need-confirm" v-show="isConfirm==3">
-					<div class="need-confirm-content">
-						<p>
-							头部姿势：
-							<span>正面</span>
-							<img :src="tip_img.correct" alt />
-						</p>
-						<p>
-							左眼状态：
-							<span>睁眼，未戴眼镜</span>
-							<img :src="tip_img.correct" alt />
-						</p>
-						<p>
-							右眼状态：
-							<span>睁眼，未戴眼镜</span>
-							<img :src="tip_img.correct" alt />
-						</p>
-					</div>
-				</div>
-				<div class="need-confirm" v-show="isConfirm==4">
-					<div class="need-confirm-content">
-						<p>
-							头部姿势：
-							<span>正面</span>
-							<img :src="tip_img.correct" alt />
-						</p>
-						<p>
-							左眼状态：
-							<span>睁眼，未戴眼镜</span>
-							<img :src="tip_img.correct" alt />
-						</p>
-						<p>
-							右眼状态：
-							<span>睁眼，未戴眼镜</span>
-							<img :src="tip_img.correct" alt />
-						</p>
-					</div>
-				</div>
+			<!-- 人脸照片上传过程展示 -->
+			<div v-show="[1,2,3,4].includes(this.show_var)">
+				<DetectFace></DetectFace>
 			</div>
-			<div class="photograph-btn" v-show="isConfirm==0">
+			<!-- 深度分析阶段的动画效果 -->
+			<div v-show="this.show_var==7">
+				<Analysis ref='childAnalysis'></Analysis>
+			</div>
+			<!-- 报告前展示部分 -->
+			<div v-show="this.show_var==8">
+				<ConfirmName></ConfirmName>
+			</div>
+			<!-- 底部上传照片、确认等按钮 -->
+			<div class="photograph-btn" v-show="this.show_var==0">
 				<van-uploader enctype="multipart/form-data" accept="image/*" :after-read="afterRead">
 					<van-button class="button-div btn_photo_bg" id="btn_photo" type="primary">
 						<van-icon color="#84FF00" size="4vw" name="photograph" />拍照/上传照片
 					</van-button>
 				</van-uploader>
 			</div>
-			<div class="photograph-btn" v-show="isConfirm==4">
+			<div class="photograph-btn" v-show="this.show_var==4">
 				<van-button class="button-div btn_photo_bg1 btn_photo_color" @click="handleBtnAgain" type="primary">
 					重新上传</van-button>
 				<van-button class="button-div btn_photo_bg1" @click="handleBtnConfirm">
@@ -107,26 +57,26 @@
 	</div>
 </template>
 <script>
-	// import BaseRouterTransition from '../../components/BaseRouterTransition'
-	import axios from 'axios'
-	import * as faceapi from 'face-api.js';
+	import Analysis from '../../components/Analysis.vue'
+	import ConfirmName from '../../components/ConfirmName.vue'
+	import PicTip from '../../components/PicTip.vue'
+	import DetectFace from '../../components/DetectFace.vue'
+	
 	import request from '../../utils/request'
 	import comm_fun from '../../utils/CommonFunction'
-	// var COS = require('cos-js-sdk-v5')
+	import axios from 'axios'
+	import * as faceapi from 'face-api.js';
 	import {
 		imgCosupload,
 		ImgUrlBeauty
 	} from '../../api/app.js'
-	import {
-		mapActions,
-		mapState
-	} from 'vuex'
+	import {mapActions,mapState} from 'vuex'
 	export default {
 		data() {
 			return {
 				title: '测测你颜值',
 				title2: '属于哪一种类型?',
-				isTitle: '',
+				isTitle: '准备中',
 				photo_img: require('../../assets/images02/photograph/touxiang.png'),
 				isConfirm: 0,
 				tip_img: {
@@ -137,16 +87,22 @@
 			}
 		},
 		components: {
+			Analysis,
+			ConfirmName,
+			PicTip,
+			DetectFace
 			// BaseRouterTransition
 		},
 		computed: {
 			...mapState({
-				parmes_url: state => state.app.save_url
+				parmes_url: state => state.app.save_url,
+				show_var: state => state.app.show_var
 			})
 		},
 		methods: {
 			...mapActions([
-				'set_app'
+				'set_app',
+				'set_show'
 			]),
 			async detect_face() {
 				const MODEL_URL = "/models";
@@ -157,12 +113,17 @@
 				img.src = this.photo_img
 				const detections = await faceapi.detectAllFaces(img)
 				const is_face = detections.length
+				this.isTitle = '初步检测'
 				if (is_face){
-					this.isConfirm=4
+					this.set_show(4)
 				} else {
-					this.isConfirm=2
+					this.set_show(2)
 				}
+				
 				return detections.length
+			},
+			async dram_landmarks() {
+				
 			},
 			afterRead(file) {
 				// 此时可以自行将文件上传至服务器
@@ -176,16 +137,17 @@
 				})
 				// console.log(this.$store.state.app.app.parmes_data)
 				this.file = file
-				this.isConfirm=1
+				this.set_show(1)
+				this.isTitle = '基础检测'
 				this.ConfirmUpload(file)
 			},
 			ConfirmUpload(file) {
 				// console.log(file)
 				this.photo_img = file.content
-				this.isTitle = '确认照片'
-				let a = this.detect_face()
+				console.log('点击上传后，show_var:',this.show_var)
+				let face_num = this.detect_face()
 				console.log('====')
-				console.log(a)
+				console.log(face_num)
 			},
 			// 确认 上传
 			handleBtnConfirm() {
@@ -205,14 +167,16 @@
 					})
 				}).catch((res) => {
 					alert("错误：" + res);
-					this.$router.push({
-						name: 'analysisnew'
-					})
+					// this.$router.push({
+					// 	name: 'analysisnew'
+					// })
+					this.set_show(7)
+					this.$refs.childAnalysis.updateStatus()
 				});
 			},
 			// 重新上传
 			handleBtnAgain() {
-				this.isConfirm = 0
+				this.set_show(0)
 				this.photo_img =
 					'http://m3d-storage-dev-1251693531.cos.ap-shanghai.myqcloud.com/h5/ai/beauty/images/touxiang.png'
 			}
@@ -227,7 +191,7 @@
 		width: 100%;
 		color: #fff;
 		background-color: #001037;
-		overflow: scroll;
+		overflow: auto;
 	}
 	.bg-img {
 		z-index: 1;
@@ -287,7 +251,7 @@
 		}
 		.head-icon {
 			height: 5vh;
-			margin: 1vh auto;
+			margin: 2vh auto;
 			.icon {
 				width: 91px;
 				height: 3px;
@@ -299,91 +263,33 @@
 			}
 			.title {
 				height: 50%;
-				margin: 0;
+				margin: 1vh auto;
 			}
 		}
-		.tip {
-			font-size: 5vw;
-			line-height: 5vw;
-			margin: 1vh auto;
-			color: #0096ff;
-			display: inline-block;
-		}
-		.need {
-			width: 100%;
-			height: 30vh;
-			margin: 1vh auto;
-			display:flex;
-			flex-direction: column;
-			align-items: center;
-			justify-content: space-around;
-			.item {
-				height: 1.875rem;
-				line-height: 1.875rem;
-				background: url("../../assets/images/photograph/juxing.png") no-repeat center;
-				background-size: 45% 100%;
-				font-size: 3vw;
-				width: 100%;
-			}
-		}
-		.need-confirm {
-			width: 100%;
-			height: 30vh;
-			margin: 1vh auto;
-			// background: url("../../assets/images/photograph/confirmjuxing.png")
-			//   no-repeat 100%;
-			background-size: 100% 100%;
-			// margin-top: -43px;
-			.need-confirm-content {
-				padding: 4px 52px 4px 52px;
-				height: 100%;
-				display:flex;
-				flex-direction: column;
-				align-items: stretch;
-				justify-content: space-around;
-				p {
-					text-align: left;
-					font-size: 10px;
-					font-weight: 400;
-					line-height: 24px;
-					color: #008dff;
-					// margin-bottom: 45px;
-					span {
-						color: #fff;
-					}
-					img {
-						width: 22px;
-						height: 22px;
-						float: right;
-					}
-					//动画效果
-					.load-stuts {
-						width: 20px;
-						height: 20px;
-						animation: rotatecss 1s linear infinite;
-						// background: url("../../assets/images/saomiao/loading.png") no-repeat;
-						// background-size: 100% 100%;
-					}
-					@keyframes rotatecss {
-						0% {
-							transform: rotate(0deg);
-						}
-						25% {
-							transform: rotate(90deg);
-						}
-						50% {
-							transform: rotate(180deg);
-						}
-						75% {
-							transform: rotate(270deg);
-						}
-						100% {
-							transform: rotate(360deg);
-						}
-					}
-				}
-			}
-		}
+		// .tip {
+		// 	font-size: 5vw;
+		// 	line-height: 5vw;
+		// 	margin: 1vh auto;
+		// 	color: #0096ff;
+		// 	display: inline-block;
+		// }
+		// .need {
+		// 	width: 100%;
+		// 	height: 30vh;
+		// 	margin: 1vh auto;
+		// 	display:flex;
+		// 	flex-direction: column;
+		// 	align-items: center;
+		// 	justify-content: space-around;
+		// 	.item {
+		// 		height: 1.875rem;
+		// 		line-height: 1.875rem;
+		// 		background: url("../../assets/images/photograph/juxing.png") no-repeat center;
+		// 		background-size: 45% 100%;
+		// 		font-size: 3vw;
+		// 		width: 100%;
+		// 	}
+		// }
 		.photograph-btn {
 			margin: 4vw 5vw;
 			height: 15vh;
