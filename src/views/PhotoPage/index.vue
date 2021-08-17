@@ -35,7 +35,6 @@
 			<div v-show="this.show_var==7">
 				<Analysis ref='childAnalysis'></Analysis>
 			</div>
-			<!-- 报告前展示部分 -->
 			<div v-show="this.show_var==8">
 				<ConfirmName></ConfirmName>
 			</div>

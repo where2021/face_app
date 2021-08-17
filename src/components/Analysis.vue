@@ -1,6 +1,6 @@
 <template>
 	<!-- 头像图片下面动画效果部分 -->
-	<div>
+	<div class="analysis-div">
 		<div class="process-item">
 			<div>测量三庭</div>
 			<div>定位五官</div>
@@ -103,102 +103,115 @@
 	}
 </script>
 <style lang="scss" scoped>
-.process-item {
-	margin: 1rem auto;
+.analysis-div {
 	display: flex;
-	justify-content: space-around;
-	font-size: 1rem;
-	font-weight: 40;
-	line-height: 1rem;
-	color: #55b9ff;
-}
-.transtion-css {
-	position: relative;
-	img {
-		width: 4%;
-		height: 2vh;
-		position: absolute;
-		left: 14%;
+	flex-direction: column;
+	justify-content: center;
+	align-items: space-around;
+	height: 50vh;
+	.process-item {
+		width: 100%;
+		margin: 1rem auto;
+		display: flex;
+		flex-direction: row;
+		justify-content: space-around;
+		font-size: 1rem;
+		font-weight: 40;
+		line-height: 1rem;
+		color: #55b9ff;
 	}
-	.transtion-two {
-		left: 48%;
-		animation: statusCssone 0.2s linear;
-	}
-	@keyframes statusCssone {
-		0% {
+	.transtion-css {
+		position: relative;
+		img {
+			width: 4%;
+			height: 2vh;
+			position: absolute;
 			left: 14%;
 		}
-
-		100% {
+		.transtion-two {
 			left: 48%;
+			animation: statusCssone 0.2s linear;
 		}
-	}
-
-	.transtion-three {
-		left: 82%;
-		animation: statusCssthree 1.2s linear;
-	}
-	@keyframes statusCssthree {
-		0% {
-			left: 48%;
-		}
-
-		100% {
-			left: 82%;
-		}
-	}
-}
-.status-info {
-	width: 70%;
-	margin: 0 auto;
-	margin-top: 5rem;
-	p {
-		text-align: left;
-		height: 40px;
-		line-height: 40px;
-		font-size: 15px;
-		font-weight: 200;
-		position: relative;
-		i {
-			width: 20px;
-			height: 20px;
-			display: block;
-			background: url("../assets/images/photograph/correct.png") no-repeat;
-			background-size: 100% 100%;
-			float: right;
-			margin-top: 10px;
-		}
-		.active_ {
-			width: 20px;
-			height: 20px;
-			animation: rotatecss 1s linear infinite;
-			background: url("../assets/images/saomiao/loading.png") no-repeat;
-			background-size: 100% 100%;
-		}
-		@keyframes rotatecss {
+		@keyframes statusCssone {
 			0% {
-				transform: rotate(0deg);
+				left: 14%;
 			}
-
-			25% {
-				transform: rotate(90deg);
-			}
-
-			50% {
-				transform: rotate(180deg);
-			}
-
-			75% {
-				transform: rotate(270deg);
-			}
-
+	
 			100% {
-				transform: rotate(360deg);
+				left: 48%;
+			}
+		}
+	
+		.transtion-three {
+			left: 82%;
+			animation: statusCssthree 1.2s linear;
+		}
+		@keyframes statusCssthree {
+			0% {
+				left: 48%;
+			}
+	
+			100% {
+				left: 82%;
 			}
 		}
 	}
-	p:nth-child(3) {
-		border-bottom: none;
+	.status-info {
+		display: flex;
+		flex-direction: column;
+		justify-content: space-around;
+		height: 20vh;
+		width: 70%;
+		margin: 0 auto;
+		margin-top: 5vh;
+		p {
+			text-align: left;
+			height: 40px;
+			line-height: 40px;
+			font-size: 15px;
+			font-weight: 200;
+			position: relative;
+			i {
+				width: 20px;
+				height: 20px;
+				display: block;
+				background: url("../assets/images/photograph/correct.png") no-repeat;
+				background-size: 100% 100%;
+				float: right;
+				margin-top: 10px;
+			}
+			.active_ {
+				width: 20px;
+				height: 20px;
+				animation: rotatecss 1s linear infinite;
+				background: url("../assets/images/saomiao/loading.png") no-repeat;
+				background-size: 100% 100%;
+			}
+			@keyframes rotatecss {
+				0% {
+					transform: rotate(0deg);
+				}
+	
+				25% {
+					transform: rotate(90deg);
+				}
+	
+				50% {
+					transform: rotate(180deg);
+				}
+	
+				75% {
+					transform: rotate(270deg);
+				}
+	
+				100% {
+					transform: rotate(360deg);
+				}
+			}
+		}
+		p:nth-child(3) {
+			border-bottom: none;
+		}
 	}
 }
 </style>

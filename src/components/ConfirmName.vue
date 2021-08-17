@@ -1,6 +1,6 @@
 <template>
 	<!-- 面向报告生成页 -->
-	<div class="report">
+	<div class="pre-report">
 		<div class="input-content">
 			<input v-show="!isName" type="text" v-model="name" placeholder="请输入您的姓名" />
 			<!-- <van-button v-show="!isName" type="info" @click="handleSaveName">保存</van-button> -->
@@ -31,8 +31,6 @@
 				'set_app',
 				'set_show'
 			]),
-			// 过场 上传动画
-			
 			// 保存姓名
 			handleSaveName(e) {
 				console.log(this.name)
@@ -58,8 +56,14 @@
 	}
 </script>
 <style lang="scss" scoped>
-.report {
+.pre-report {
+	height: 40vh;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
+	align-items: center;
 	.input-content {
+		width: 100%;
 		background: url("../assets/images/saomiao/bg_input.png") no-repeat;
 		background-size: 100% 100%;
 		input {
