@@ -10,7 +10,8 @@
 				<span>{{ title2 }}</span>
 			</p>
 			<div class="img-Head">
-				<van-image radius="0" :src="photo_img" />
+				<img id='main-img' radius="0" :src="photo_img" />
+				<canvas id="overlay" />
 			</div>
 			<div class="head-icon">
 				<p class="title">{{ isTitle }}</p>
@@ -42,15 +43,15 @@
 			<div class="photograph-btn" v-show="this.show_var==0">
 				<van-uploader enctype="multipart/form-data" accept="image/*" :after-read="afterRead">
 					<van-button class="button-div btn_photo_bg" id="btn_photo" type="primary">
-						<van-icon color="#84FF00" size="4vw" name="photograph" />拍照/上传照片
+						<van-icon color="#84FF00" size="4vw" name="photograph" />拍照/选择照片
 					</van-button>
 				</van-uploader>
 			</div>
 			<div class="photograph-btn" v-show="this.show_var==4">
 				<van-button class="button-div btn_photo_bg1 btn_photo_color" @click="handleBtnAgain" type="primary">
-					重新上传</van-button>
+					重选照片</van-button>
 				<van-button class="button-div btn_photo_bg1" @click="handleBtnConfirm">
-					确认上传</van-button>
+					深度分析</van-button>
 			</div>
 		</div>
 	</div>
@@ -90,7 +91,6 @@
 			ConfirmName,
 			PicTip,
 			DetectFace
-			// BaseRouterTransition
 		},
 		computed: {
 			...mapState({
@@ -98,11 +98,20 @@
 				show_var: state => state.app.show_var
 			})
 		},
+		// mounted() {
+		// 	this.load_model()
+		// },
 		methods: {
 			...mapActions([
 				'set_app',
 				'set_show'
 			]),
+			async load_model() {
+				const MODEL_URL = "/models";
+				await faceapi.loadSsdMobilenetv1Model(MODEL_URL);
+				await faceapi.loadFaceLandmarkModel(MODEL_URL);
+				await faceapi.loadFaceRecognitionModel(MODEL_URL);
+			},
 			async detect_face() {
 				const MODEL_URL = "/models";
 				await faceapi.loadSsdMobilenetv1Model(MODEL_URL);
@@ -121,16 +130,28 @@
 				
 				return detections.length
 			},
-			async dram_landmarks() {
-				
+			async dram_face() {
+				const input = document.getElementById('main-img')
+				// detect_face()已经完成模型加载
+				const detections = await faceapi.detectAllFaces(input).withFaceLandmarks()
+				const detectionsForSize = await faceapi.resizeResults(detections, {
+					width: input.width,
+					height: input.height
+				})
+				const canvas = document.getElementById('overlay')
+				canvas.width = input.width
+				canvas.height = input.height
+				// faceapi.draw.drawDetections(canvas, detectionsForSize, {
+				// 	withScore: false
+				// })
+				faceapi.draw.drawFaceLandmarks(canvas, detectionsForSize, {
+					withScore: false
+				})
+				console.log('finish draw')
 			},
 			afterRead(file) {
 				// 此时可以自行将文件上传至服务器
 				// alert(JSON.stringify(file))
-				// console.log(file.content)
-				// console.log(Object.keys(file))
-				// 在这里应该调用上传接口  做一些用户操作提示性的tip
-				// console.log(file)
 				this.set_app({
 				  parmes_data: file.content,
 				})
@@ -145,6 +166,7 @@
 				this.photo_img = file.content
 				console.log('点击上传后，show_var:',this.show_var)
 				let face_num = this.detect_face()
+				// this.dram_face()
 				console.log('====')
 				console.log(face_num)
 			},
@@ -161,14 +183,15 @@
 				instance.post(`/upload`, params
 				).then((res) => {
 					console.log(res.data.content);
-					this.$router.push({
-						name: 'analysisnew'
-					})
-				}).catch((res) => {
-					alert("错误：" + res);
 					// this.$router.push({
 					// 	name: 'analysisnew'
 					// })
+					this.dram_face()
+					this.set_show(7)
+					this.$refs.childAnalysis.updateStatus()
+				}).catch((res) => {
+					// alert("错误：" + res);
+					this.dram_face()
 					this.set_show(7)
 					this.$refs.childAnalysis.updateStatus()
 				});
@@ -242,10 +265,21 @@
 			}
 		}
 		.img-Head {
+			position: relative;
 			height: 20vh;
 			margin: 1vh auto;
-			.van-image {
+			#main-img {
 				height: 20vh;
+				// position: absolutes;
+				// left: 0;
+			}
+			#overlay {
+				position: absolute;
+				top:0;
+				left: 0;
+				right: 0;
+				bottom: 0;
+				margin:auto;
 			}
 		}
 		.head-icon {
