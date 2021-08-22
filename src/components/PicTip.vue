@@ -15,7 +15,6 @@
 </template>
 <script>
 	import { mapActions, mapState } from 'vuex'
-	import {Dialog} from 'vant';
 	export default {
 		data() {
 			return {
@@ -45,7 +44,7 @@
 			handleReceiveReport() {
 				if (this.name === '') {
 					console.log(this.name)
-					Dialog.alert({
+					alert({
 						message: '请输入姓名后领取报告!'
 					}).then(() => {
 						// on close

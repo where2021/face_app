@@ -3,16 +3,14 @@
 	<div class="pre-report">
 		<div class="input-content">
 			<input v-show="!isName" type="text" v-model="name" placeholder="请输入您的姓名" />
-			<!-- <van-button v-show="!isName" type="info" @click="handleSaveName">保存</van-button> -->
 			<p v-show="isName">{{ name }}</p>
 		</div>
-		<van-button :class="{ saveName: isName }" class="btn_photo_bg" @click="handleReceiveReport">领取报告
-		</van-button>
+		<button :class="{ saveName: isName }" class="btn_photo_bg" @click="handleReceiveReport">领取报告
+		</button>
 	</div>
 </template>
 <script>
 	import { mapActions, mapState } from 'vuex'
-	import {Dialog} from 'vant';
 	export default {
 		data() {
 			return {
@@ -39,7 +37,7 @@
 			handleReceiveReport() {
 				if (this.name === '') {
 					console.log(this.name)
-					Dialog.alert({
+					alert({
 						message: '请输入姓名后领取报告!'
 					}).then(() => {
 						// on close
